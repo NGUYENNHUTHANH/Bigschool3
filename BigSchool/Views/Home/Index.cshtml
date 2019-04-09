@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model BigSchool.ViewModels.CoursesViewModel
+
+<div class="jumbotron">
+    <h1>ĐẠI HỌC CÔNG NGHỆ TP HCM</h1>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Tìm hiểu thêm &raquo;</a></p>
+</div>
+
+<div class="row">
+    <ul class="course">
+        @foreach (var course in Model.UpcomingCourses)
+        {
+            <li>
+                <div class="date">
+                    <div class="month">
+                        @course.DateTime.ToString("MM")
+                    </div>
+                    <div class="day">
+                        @course.DateTime.ToString("dd")
+                    </div>
+                </div>
+                <div class="details">
+                    <span class="lecturer">
+                        @course.Lecturer.Name
+                        @if (Model.ShowAction)
+                        {
+                            <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button>
+                        }
+                    </span>
+                    <p class="category">
+                        @course.Category.Name
+                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going</button>
+                    </p>
+
+                </div>
+            </li>
+        }
+    </ul>
+  
+    @section scripts {
+        <script>
+            $(document).ready(() => {
+                alert("Hello World!");
+
+                CourseController.init();
+
+
+                $(".js-toggle-follow").click((e) => {
+                    var button = $(e.target);
+                    $.post("/api/followings", { followeeId: button.attr("data-user-id") })
+                        .done(() => {
+                            button.text("Following");
+                        })
+                        .fail(() => {
+                            alert("Something failed!");
+                        });
+                });
+            })
+        </script>
+        <div>
+            <div>
+                <div style="float:right; width:400px; padding-bottom:30px;">
+                    <h3 style="font:bold;  font-weight:bold;">Fanpage</h3>
+                    <div class="fb-page" data-href="https://www.facebook.com/facebook" data-tabs="timeline" data-width="300" data-height="300" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
+                        <blockquote cite="https://www.facebook.com/facebook" class="fb-xfbml-parse-ignore"></blockquote>
+                    </div>
+                </div>
+                <div style="float:right; width:400px; padding-bottom:30px; margin-right:40px">
+                    <h3 style="font:bold;  font-weight:bold;">Địa điểm mua</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d501725.3382127031!2d106.41502321387179!3d10.755341097922974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529292e8d3dd1%3A0xf15f5aad773c112b!2zSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1552914407048" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+
+    }
+</div>
